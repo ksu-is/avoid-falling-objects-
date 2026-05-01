@@ -90,48 +90,69 @@ class Dodger:
         self.char_window_canvas.pack()
 
     def game(self):
+
         self.char_window.destroy()
 
         self.game_window = tk.Tk()
         self.game_window.title("Dodger!")
 
-        # Fullscreen
         self.game_window.attributes('-fullscreen', True)
 
-        # Screen size
         self.screen_width = self.game_window.winfo_screenwidth()
         self.screen_height = self.game_window.winfo_screenheight()
 
-        # Canvas
+        # IMPORTANT:
+        self.platform_y = self.screen_height - 120
+
         self.game_window_canvas = tk.Canvas(
             self.game_window,
             width=self.screen_width,
             height=self.screen_height,
             bg='black'
         )
+
         self.game_window_canvas.pack()
 
-        # Starting position
+        # PLATFORM
+        self.platform = self.game_window_canvas.create_rectangle(
+            0,
+            self.platform_y + 30,
+            self.screen_width,
+            self.platform_y + 60,
+            fill="green"
+        )
+
+        # CHARACTER START
         x1 = self.screen_width // 2 - 25
         x2 = self.screen_width // 2 + 25
-        y1 = self.screen_height - 125
-        y2 = self.screen_height - 75
 
-    # Game state
+        y1 = self.platform_y - 25
+        y2 = self.platform_y + 25
+
         self.score = 0
         self.running = True
-        self.move_speed = 15   
-    # Create character
+        self.move_speed = 20
+
         self.character = self.game_window_canvas.create_oval(
-        x1, y1, x2, y2, fill=self.color_choice
-    )
+            x1,
+            y1,
+            x2,
+            y2,
+            fill=self.color_choice
+        )
 
-        self.coords = [self.screen_width // 2, self.screen_height - 100]
+        self.coords = [self.screen_width // 2, self.platform_y]
 
-    # Create UI + bindings
         self.create_game_widgets()
 
-    # START GAME LOOP
+        self.game_window.focus_force()
+
+        self.game_window.bind("<Left>", lambda e: self.move_left())
+        self.game_window.bind("<Right>", lambda e: self.move_right())
+
+        self.game_window.bind("a", lambda e: self.move_left())
+        self.game_window.bind("d", lambda e: self.move_right())
+
         self.run_game()
     def run_game(self):
         if not self.running:
@@ -141,13 +162,11 @@ class Dodger:
 
         self.game_window.after(30, self.run_game)
     def movement(self, event):
-        """
-        This method draws the character at a given point in the xy coordinate plane based on the user's mouse movements.
-        """
-        self.event = event
-        if 25 <= self.event.x <= self.screen_width - 25 and 25 <= self.event.y <= self.screen_height - 25:
-            self.coords = [self.event.x, self.event.y]
-        self.drawCharacter(self.event.x, self.event.y)
+
+        if 25 <= event.x <= self.screen_width - 25:
+            self.coords[0] = event.x
+
+        self.drawCharacter(self.coords[0], self.platform_y)
 
     def spikes_easy(self):
         # Create spike once
@@ -155,7 +174,7 @@ class Dodger:
             self.rand_x = randrange(30, self.screen_width - 50)
             self.spike_y = -20
             self.current_spike = self.game_window_canvas.create_oval(
-                self.rand_x, self.spike_y, self.rand_x + 40, self.spike_y + 40, fill='orange'
+                self.rand_x, self.spike_y, self.rand_x + 40, self.spike_y + 40, fill='red'
             )
 
         # Move spike down
@@ -238,12 +257,9 @@ class Dodger:
         self.score += 3
 
     def drawCharacter(self, x, y):
-        """
-        This method draws the character at a given point in the xy coordinate plane
-        """
-        if 25 <= x <= self.screen_width - 25 and 25 <= y <= self.screen_height - 25:
-            self.game_window_canvas.coords(self.character, x - 25, y - 25, x + 25, y + 25)
-        
+
+        self.game_window_canvas.coords( self.character, x - 25, self.platform_y - 25, x + 25, self.platform_y + 25
+    )
     def create_game_widgets(self):
         """
         This method contains widgets that bind the character's movements to the self.movement method, in addition to providing the user
@@ -266,38 +282,23 @@ class Dodger:
         quit_button.grid(row=3, columnspan=3)
         self.game_window_canvas.bind("<Left>", lambda e: self.move_left())
         self.game_window_canvas.bind("<Right>", lambda e: self.move_right())
-        self.game_window_canvas.bind("<Up>", lambda e: self.move_up())
-        self.game_window_canvas.bind("<Down>", lambda e: self.move_down())
         self.game_window_canvas.bind("<KeyPress-a>", lambda e: self.move_left())
         self.game_window_canvas.bind("<KeyPress-d>", lambda e: self.move_right())
-        self.game_window_canvas.bind("<KeyPress-w>", lambda e: self.move_up())
-        self.game_window_canvas.bind("<KeyPress-s>", lambda e: self.move_down())
     def quit_game(self):
         self.running = False
         self.game_window.destroy()
-    def move_left(self):
-        x, y = self.coords
-        if x - self.move_speed > 25:
-            self.coords[0] -= self.move_speed
-            self.drawCharacter(self.coords[0], self.coords[1])
-
     def move_right(self):
-        x, y = self.coords
-        if x + self.move_speed < self.screen_width - 25:
-            self.coords[0] += self.move_speed
-            self.drawCharacter(self.coords[0], self.coords[1])
+        if self.coords[0] + self.move_speed < self.screen_width - 25:
+         self.coords[0] += self.move_speed
+         self.drawCharacter(self.coords[0], self.platform_y)
 
-    def move_up(self):
-        x, y = self.coords
-        if y - self.move_speed > 25:
-            self.coords[1] -= self.move_speed
-            self.drawCharacter(self.coords[0], self.coords[1])
+    def move_left(self):
 
-    def move_down(self):
-        x, y = self.coords
-        if y + self.move_speed < self.screen_height - 25:
-            self.coords[1] += self.move_speed
-            self.drawCharacter(self.coords[0], self.coords[1])
+        if self.coords[0] - self.move_speed > 25:
+            self.coords[0] -= self.move_speed
+
+        self.drawCharacter(self.coords[0], self.platform_y)
+        self.drawCharacter(self.coords[0], self.platform_y)
     def play_again(self):
         """
         This method destroys the game over window, and restarts the program.
