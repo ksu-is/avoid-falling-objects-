@@ -9,7 +9,7 @@ Because its very similar to the project I was planning on constructing one idea 
  - Completed: spike system
  - Completed: fullscreen mode
  - Completed: Added fullscreen for game over and a game over button overhaul
- - Add sound effects
+ - Add Platform and only able to move in a certain area
  - Add difficulty scaling
  - Refined any crashing
   ## progress 
