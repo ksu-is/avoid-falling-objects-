@@ -4,6 +4,7 @@ The game I found was very similar to what I wanted to create except for the land
 From reviewing the code, I learned how player movement is handled using keyboard inputs. I also learned how objects fall from the top of the screen by updating their position in a loop.
 ## Next Steps
 Because its very similar to the project I was planning on constructing one idea I also had is added many features to not only just be a simple game but to also have the person with more options. 
+## task completed/ still need to finish 
  Completed: movement system
  Completed: spike system
  Completed: fullscreen mode
