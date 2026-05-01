@@ -7,6 +7,7 @@ Because its very similar to the project I was planning on constructing one idea 
  Completed: movement system
  Completed: spike system
  Completed: fullscreen mode
+ Completed: Added fullscreen for game over and a game over button overhaul
  -Add sound effects
  -Add difficulty scaling
  - Refined any crashing
