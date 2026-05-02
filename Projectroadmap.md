@@ -9,8 +9,8 @@ Because its very similar to the project I was planning on constructing one idea 
  - Completed: spike system
  - Completed: fullscreen mode
  - Completed: Added fullscreen for game over and a game over button overhaul
- - Add Platform and only able to move in a certain area
- - Add difficulty scaling
+ - Completed: Add Platform and only able to move in a certain area
+ - Add pngs to objects. 
  - Refined any crashing
   ## progress 
   When running the program designed by Michael Varnerin I came across many inconvinent areas that could effect the players experience. 
